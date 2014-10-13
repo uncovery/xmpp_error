@@ -66,9 +66,9 @@ function XMPP_ERROR_send_msg($msg) {
     global $XMPP_ERROR;
 
     // assume we use JAXL, if other systems should be used, those would have to branch here
-    if ($XMPP_ERROR['config']['name'] == 'JAXL') {
-        require_once $XMPP_ERROR['config']['path'] . '/jaxl.php';
-        require_once $XMPP_ERROR['config']['path'] . '/xmpp/xmpp_msg.php';
+    if ($XMPP_ERROR['config']['xmpp_lib_name'] == 'JAXL') {
+        require_once $XMPP_ERROR['config']['xmpp_lib_path'] . '/jaxl.php';
+        require_once $XMPP_ERROR['config']['xmpp_lib_path'] . '/xmpp/xmpp_msg.php';
     } else {
         die('currently, XMPP_ERROR only supports JAXL as a xmpp sending module');
     }
@@ -77,7 +77,7 @@ function XMPP_ERROR_send_msg($msg) {
     $date_obj = new DateTime();
     // we allow definition of an alternative timezone to be more admin-friendly
     if ($XMPP_ERROR['config']['timezone']) {
-        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['timezone']));
+        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['reports_timezone']));
     }
     // format time
     $today = $date_obj->format('Y-m-d H:i:s');
@@ -93,16 +93,16 @@ function XMPP_ERROR_send_msg($msg) {
 
     // configure the XMPP Client to send hte message
     $client = new JAXL(array(
-        'jid' => $XMPP_ERROR['config']['username'],
-        'pass' => $XMPP_ERROR['config']['password'],
-        'auth_type' => $XMPP_ERROR['config']['auth-type'],
+        'jid' => $XMPP_ERROR['config']['xmpp_sender_username'],
+        'pass' => $XMPP_ERROR['config']['xmpp_sender_password'],
+        'auth_type' => $XMPP_ERROR['config']['xmpp_sender_auth-type'],
         'log_level' => JAXL_ERROR,
         'strict' => false,
     ));
     // add the message
     $client->add_cb('on_auth_success', function() {
         global $client, $message, $XMPP_ERROR;
-        $client->send_chat_msg($XMPP_ERROR['config']['recipient'], $message);
+        $client->send_chat_msg($XMPP_ERROR['config']['xmpp_recipient'], $message);
         $client->send_end_stream();
     });
 
@@ -130,7 +130,7 @@ function XMPP_ERROR_error_report($error) {
     $date_obj = new DateTime();
     // we allow definition of an alternative timezone to be more admin-friendly
     if ($XMPP_ERROR['config']['timezone']) {
-        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['timezone']));
+        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['reports_timezone']));
     }
     // date elements for the folders
     $year = $date_obj->format('Y');
@@ -142,9 +142,9 @@ function XMPP_ERROR_error_report($error) {
     $now = $date_obj->format('Y-m-d_H:i:s') . substr((string)microtime(), 1, 8) . "_" . rand(0, 9999999999999);
 
     // path to store the attached message
-    $path = $XMPP_ERROR['config']['file_path'] . "/$year/$month/$day/$hour/";
+    $path = $XMPP_ERROR['config']['reports_path'] . "/$year/$month/$day/$hour/";
     // url to reach the message
-    $url = $XMPP_ERROR['config']['url'] . "/$year/$month/$day/$hour/";
+    $url = $XMPP_ERROR['config']['reports_url'] . "/$year/$month/$day/$hour/";
     // final filename
     $file = "Error_$now.html";
     // check if we need to create the directory
@@ -160,7 +160,7 @@ function XMPP_ERROR_error_report($error) {
     // XMPP_ERROR_archive();
 
     // add the configured header for the attached message
-    $msg_text = $XMPP_ERROR['config']['header'];
+    $msg_text = $XMPP_ERROR['config']['reports_header'];
     // initialize the variable
     $main_error = '';
 
@@ -214,7 +214,7 @@ function XMPP_ERROR_error_report($error) {
     }
 
     // now add the configured footer
-    $msg_text .= $XMPP_ERROR['config']['footer'];
+    $msg_text .= $XMPP_ERROR['config']['reports_footer'];
 
     // write the whole thing to a file
     $check = file_put_contents($path . $file, $msg_text);
