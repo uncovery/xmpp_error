@@ -1,7 +1,7 @@
 XMPP_ERROR
 ==========
 
-A lightweight PHP error managemnt tool that reports errors to you via XMPP/Jabber
+A lightweight PHP error management tool that reports errors to you via XMPP/Jabber
 
 REQUIREMENTS: 
 * JAXL: http://jaxl.readthedocs.org/en/latest/
