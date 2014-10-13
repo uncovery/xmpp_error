@@ -43,7 +43,6 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
         XMPP_ERROR_trace(__FUNCTION__, func_get_args());
     }
 ```
-
 * Even further, one can trigger an error report on specific parts of the script.
   This is specially helpful if certain conditions of the script should not be 
   met under any "healthy" conditions:
