@@ -23,8 +23,9 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 * Multiple recipients for messages
 
 #### Installation:
-* Setup the required 2 XMPP accounts on your XMPP server
-* Setup an XMPP client to receive messages for the admin XMPP account
+* Setup the required 2 XMPP accounts on your XMPP server, the server account 
+  to send messages from PHP and the client account that received messages.
+* Setup an XMPP client to receive messages from the server XMPP account
 * Configure config.default.php as required
 * Rename config.default.php to config.php
 * Test the setup by running test.php . If you run this from the command line,
@@ -35,7 +36,11 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
   * E_NOTICE: Undefined variable: test in line 16 of file /xmpp_error/test.php
   This last message should have a link attached to a HTML file that contains the
   $XMPP_ERROR error report with 3 elements
-* Include the file xmpp_error.php in your project, possibly at first.
+* Include the file xmpp_error.php in your project, possibly at first with a line 
+  such as 
+  ```php
+    require_once('/path/to/xmpp_error.php');
+  ```
 
 #### Usage:
 * After installation is complete, errors should generate reports in the
