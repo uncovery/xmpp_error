@@ -353,13 +353,13 @@ function XMPP_ERROR_archive() {
     if (file_exists($day_path)) {
         // archive the folder
         $zip_check = XMPP_ERROR_zipTree($day_path, $archive_file);
-        if (!$zip_check) {
-             XMPP_ERROR_trace("XMPP_ERROR_archive", "Archive $archive_file failed");
+        if (!$zip_check && $XMPP_ERROR['config']['self_track']) {
+             XMPP_ERROR_trigger("Archive $archive_file failed");
         }
         // delete archived files by removing the directory of that day
         $rm_check = XMPP_ERROR_delTree($day_path);
         if (!$rm_check && $XMPP_ERROR['config']['self_track']) {
-            XMPP_ERROR_trace("XMPP_ERROR_archive", "Remove $day_path failed");
+            XMPP_ERROR_trace("Archive remove $day_path failed");
         }
     } else {
         XMPP_ERROR_trace("No archive created", "PAth $day_path does not exist");
@@ -408,7 +408,9 @@ function XMPP_ERROR_zipTree($source, $destination) {
 
     $real_source = str_replace('\\', '/', realpath($source));
     if (is_dir($real_source) === true) {
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($real_source), RecursiveIteratorIterator::SELF_FIRST);
+        $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($real_source), 
+                RecursiveIteratorIterator::SELF_FIRST);
         foreach ($files as $file) {
             $file = str_replace('\\', '/', $file);
             // Ignore "." and ".." folders
@@ -465,10 +467,9 @@ function XMPP_ERROR_array2text($data) {
 }
 
 /**
-* Helper Function: returns the time between the start of the script until now
+* Return the time between the start of the script until now
 *
 * @return   time in seconds
-*
 */
 function XMPP_ERROR_ptime() {
     $now = microtime(true);
