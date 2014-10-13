@@ -14,11 +14,12 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 
 #### Features:
 * Sending error messages of any level (error, warning, notice etc)
-* Excluding certain errors or files from generating a message
+* Excluding certain error types or files from generating a message
 * Tracking of functions and their arguments or variables throughout the script 
   to identify procedure paths taken and variable changes
 * Millisecond-timing of all steps
 * In-process errors from the start of the script until shutdown
+* XMPP status messages outside of error reports to the client
 
 #### Installation:
 * Setup the required 2 XMPP accounts on your XMPP server
