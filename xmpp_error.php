@@ -105,7 +105,9 @@ function XMPP_ERROR_send_msg($msg) {
     // add the message
     $client->add_cb('on_auth_success', function() {
         global $client, $message, $XMPP_ERROR;
-        $client->send_chat_msg($XMPP_ERROR['config']['xmpp_recipient'], $message);
+        foreach ($XMPP_ERROR['config']['xmpp_recipient'] as $recipient) {
+            $client->send_chat_msg($recipient, $message);
+        }
         $client->send_end_stream();
     });
 
