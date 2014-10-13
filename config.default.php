@@ -26,7 +26,8 @@ $XMPP_ERROR['config']['xmpp_sender_password'] = 'my_password';
 $XMPP_ERROR['config']['xmpp_sender_auth-type'] = 'DIGEST-MD5';
 
 // recipient (client) XMPP account username
-$XMPP_ERROR['config']['xmpp_recipient'] = 'recipient-account@google.com';
+// add more array elements for several recipients
+$XMPP_ERROR['config']['xmpp_recipient'] = array('recipient1@google.com');
 
 // other variables to include in the report (strip the $!)
 // the contents of these variables will be printed as of their status at script
