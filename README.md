@@ -52,31 +52,30 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
   You can use the same function with any other arguments (preferably a 
   description for the first, and a variables for the second to insert a trace 
   for any variables in script.
-  ```php
-      function sample_function($a, $b, $c) {
-          XMPP_ERROR_trace(__FUNCTION__, func_get_args());
-      }
-  ```
+```php
+    function sample_function($a, $b, $c) {
+        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+    }
+```
 * Even further, one can trigger an error report on specific parts of the script.
   This is specially helpful if certain conditions of the script should not be 
   met under any "healthy" conditions:
-  ```php
-      function sample_function2($value) {
-          if ($value == "good_value_1") {
-              // perform action
-          } else {
-              XMPP_ERROR_trigger("Value has unexpected contents: $value");
-          }
-      }
-  ```
+```php
+    function sample_function2($value) {
+        if ($value == "good_value_1") {
+            // perform action
+        } else {
+            XMPP_ERROR_trigger("Value has unexpected contents: $value");
+        }
+```
 * Simpler, one can trigger notifications to the admin for not-so-often occuring
   actions to be aware about general activity of the project. This is not an
   error report, but rather a status message.
-  ```php
-      function sample_function_user_registration() {
-          XMPP_ERROR_send_msg("A new user has registered on the site!");
-      }
-  ```
+```php
+    function sample_function_user_registration() {
+        XMPP_ERROR_send_msg("A new user has registered on the site!");
+    }
+```
 
 #### ToDo:
 * Add CSS for the error messages
