@@ -452,7 +452,7 @@ function XMPP_ERROR_array2text($data) {
     } if (is_object($data)) {
         return $out . var_export($data, true);
     } else if (is_array($data)) {
-        $out .= "<ul>\n";
+        $out .= "(" . count($data) . ")<ul>\n";
         foreach ($data as $key => $value) {
             if (!is_numeric($key)) {
                 $key = "'$key'";
