@@ -10,6 +10,10 @@ function XMPP_ERROR_archive() {
     global $XMPP_ERROR;
     // get the relative day
     $date_obj = new DateTime($XMPP_ERROR['config']['reports_archive_date']);
+    // we allow definition of an alternative timezone to be more admin-friendly
+    if ($XMPP_ERROR['config']['reports_timezone']) {
+        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['reports_timezone']));
+    }    
     $year = $date_obj->format('Y');
     $month = $date_obj->format('m');
     $day = $date_obj->format('d');
