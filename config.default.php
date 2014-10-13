@@ -4,6 +4,11 @@
 // This should be added in case several projects use this library to report errors
 $XMPP_ERROR['config']['project_name'] = 'My Website';
 
+// shall this library track it's own error in the error reports?
+// I would enable this only if the test.php works fine.
+// TRUE or FALSE
+$XMPP_ERROR['config']['self_track'] = false;
+
 // currently, XMPP_ERROR only supports JAXL as a xmpp sending module
 // no need to change this
 $XMPP_ERROR['config']['xmpp_lib_name'] = 'JAXL';
@@ -48,6 +53,13 @@ $XMPP_ERROR['config']['ignore_type'] = array(8192);
 // year/month/day/hour subfolders. This path has to be reachable via URL
 // no trailing slash
 $XMPP_ERROR['config']['reports_path'] = '/home/my_website/public_html/errors';
+
+// Archive limit for reports; This will create daily archives of errors in the
+// above path. Should be in the format of relative dates as found in
+// http://php.net/manual/en/datetime.formats.relative.php
+// it will pick all errors from the resulting day and archive them.
+// set to FALSE if you want to disable archiving and use logrotate instead
+$XMPP_ERROR['config']['reports_archive_date'] = "7 days ago";
 
 // URL where the above files can be reached
 // no trailing slash
