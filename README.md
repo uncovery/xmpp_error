@@ -33,14 +33,17 @@ USAGE:
   configured folder and send XMPP messages to the configured recipient
 * Further, as from the exmaples in test.php, one can include tracer calls at the 
   beginning of any function to include their names and arguments into the error 
-  report:
+  report. The _\_FUNCTION_\_ will set the current function name, and 
+  func_get_args() will insert the arguments into the error report. 
+  You can use the same function with any other arguments (preferably a 
+  description for the first, and a variables for the second to insert a trace 
+  for any variables in script.
 ```php
     function sample_function($a, $b, $c) {
         XMPP_ERROR_trace(__FUNCTION__, func_get_args());
     }
 ```
-  The __FUNCTION__ will set the current function name, and func_get_args() will
-  insert the arguments into the error report
+
 * Even further, one can trigger an error report on specific parts of the script.
   This is specially helpful if certain conditions of the script should not be 
   met under any "healthy" conditions:
