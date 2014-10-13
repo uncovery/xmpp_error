@@ -38,7 +38,7 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
   $XMPP_ERROR error report with 3 elements
 * Include the file xmpp_error.php in your project, possibly at first with a line 
   such as 
-  ```php
+  ```
     require_once('/path/to/xmpp_error.php');
   ```
 
