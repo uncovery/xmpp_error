@@ -71,7 +71,6 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 ```
 
 #### ToDo:
-* Better config variable naming
 * Test and enable error message archiving with .gz
 * Add CSS for the error messages
-* Allow for several XMPP Client accounts
+* Allow for several XMPP client accounts
