@@ -40,7 +40,7 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 #### Usage:
 * After installation is complete, errors should generate reports in the
   configured folder and send XMPP messages to the configured recipient
-* Further, as from the exmaples in test.php, one can include tracer calls at the 
+* Further, as from the examples in test.php, one can include tracer calls at the 
   beginning of any function to include their names and arguments into the error 
   report. The \_\_FUNCTION\_\_ will set the current function name, and 
   func_get_args() will insert the arguments into the error report. 
