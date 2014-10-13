@@ -4,8 +4,10 @@
  * changes required. You can modify it to add different error scenarios to
  * better understand XMPP_ERROR behavior.
  */
-
 require_once('xmpp_error.php');
+
+// test if JAXL Messages can be sent:
+XMPP_ERROR_send_msg("This is a test XMPP Message");
 
 // testing a trace
 testing_trace(1,2,3);
