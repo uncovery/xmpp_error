@@ -20,6 +20,7 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 * Millisecond-timing of all steps
 * In-process errors from the start of the script until shutdown
 * XMPP status messages outside of error reports to the client
+* Multiple recipients for messages
 
 #### Installation:
 * Setup the required 2 XMPP accounts on your XMPP server
@@ -72,6 +73,4 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 ```
 
 #### ToDo:
-* Test and enable error message archiving with .gz
 * Add CSS for the error messages
-* Allow for several XMPP client accounts
