@@ -25,7 +25,14 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
 * Setup an XMPP client to receive messages for the admin XMPP account
 * Configure config.default.php as required
 * Rename config.default.php to config.php
-* Test the setup by running test.php
+* Test the setup by running test.php . If you run this from the command line,
+  make sure you run it as a user that can write files to the 
+  $XMPP_ERROR['config']['path'] folder. If successful, you should get 2 XMPP 
+  messages with a timestamp: 
+  * This is a test XMPP Message
+  * E_NOTICE: Undefined variable: test in line 16 of file /xmpp_error/test.php
+  This last message should have a link attached to a HTML file that contains the
+  $XMPP_ERROR error report with 3 elements
 * Include the file xmpp_error.php in your project, possibly at first.
 
 #### Usage:
