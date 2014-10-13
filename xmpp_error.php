@@ -27,9 +27,9 @@ register_shutdown_function("XMPP_ERROR_shutdown_handler");
  * XMPP_ERROR_trace(__FUNCTION__, func_get_args());
  * Above code will register the function name and the associated arguments
  * You can also replace the two arguments with other information you want to track
- * throughout your script such as 
+ * throughout your script such as
  * XMPP_ERROR_trace("my_check_point_name", $check_point_var);
- * 
+ *
  * @global array $XMPP_ERROR
  * @param mixed $type
  * @param mixed $data
@@ -43,7 +43,7 @@ function XMPP_ERROR_trace($type, $data) {
 /**
  * Allows manual insertion of errors that will cause a report in the end
  * Good for catching exceptions and checking for unexpected outcomes
- * 
+ *
  * @global array $XMPP_ERROR
  * @param string $text
  */
@@ -56,7 +56,7 @@ function XMPP_ERROR_trigger($text) {
 /**
  * Send an XMPP message to the configured recipient
  * You can use this function also go send texts as a script-output
- * 
+ *
  * @global array $XMPP_ERROR
  * @global JAXL $client
  * @global type $message
@@ -64,7 +64,7 @@ function XMPP_ERROR_trigger($text) {
  */
 function XMPP_ERROR_send_msg($msg) {
     global $XMPP_ERROR;
-    
+
     // assume we use JAXL, if other systems should be used, those would have to branch here
     if ($XMPP_ERROR['config']['name'] == 'JAXL') {
         require_once $XMPP_ERROR['config']['path'] . '/jaxl.php';
@@ -77,9 +77,9 @@ function XMPP_ERROR_send_msg($msg) {
     $date_obj = new DateTime();
     // we allow definition of an alternative timezone to be more admin-friendly
     if ($XMPP_ERROR['config']['timezone']) {
-        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['timezone']));    
-    } 
-    // format time 
+        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['timezone']));
+    }
+    // format time
     $today = $date_obj->format('Y-m-d H:i:s');
 
     // in case message is an array, format it so that it can be sent
@@ -89,7 +89,8 @@ function XMPP_ERROR_send_msg($msg) {
 
     global $client, $message;
     // actual message
-    $message = "$today: $msg";
+    $message = '[' . $XMPP_ERROR['config']['project_name'] . "] $today: $msg";
+
     // configure the XMPP Client to send hte message
     $client = new JAXL(array(
         'jid' => $XMPP_ERROR['config']['username'],
@@ -118,7 +119,7 @@ function XMPP_ERROR_send_msg($msg) {
 
 /**
  * Create an error report and send the message out via XMPP
- * 
+ *
  * @global array $XMPP_ERROR
  * @global type $var_name
  * @param type $error
@@ -129,8 +130,8 @@ function XMPP_ERROR_error_report($error) {
     $date_obj = new DateTime();
     // we allow definition of an alternative timezone to be more admin-friendly
     if ($XMPP_ERROR['config']['timezone']) {
-        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['timezone']));    
-    }  
+        $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['timezone']));
+    }
     // date elements for the folders
     $year = $date_obj->format('Y');
     $month = $date_obj->format('m');
@@ -157,11 +158,11 @@ function XMPP_ERROR_error_report($error) {
     }
     // compress previous months items
     // XMPP_ERROR_archive();
-    
+
     // add the configured header for the attached message
     $msg_text = $XMPP_ERROR['config']['header'];
-    // header for the error message
-    $main_error = '[' . $XMPP_ERROR['config']['project_name'] . '] ';
+    // initialize the variable
+    $main_error = '';
 
     // we have a main error that triggered the message
     $msg_text .= "<div class=\"main\"><h1>Main Error</h1>\n";
@@ -187,7 +188,7 @@ function XMPP_ERROR_error_report($error) {
     unset($xmpp_report['error']);
     unset($xmpp_report['error_manual']);
     $data['$XMPP_ERROR'] = $xmpp_report;
-    
+
     // iterate the configured globals and add them to the list
     foreach ($XMPP_ERROR['config']['track_globals'] as $var_name) {
         global $$var_name;
@@ -211,10 +212,10 @@ function XMPP_ERROR_error_report($error) {
     foreach ($data as $title => $text) {
         $msg_text .= "<div class=\"others\"><h2>$title:</h2>\n" . XMPP_ERROR_array2text($text) . "</div>\n";
     }
-    
+
     // now add the configured footer
     $msg_text .= $XMPP_ERROR['config']['footer'];
-    
+
     // write the whole thing to a file
     $check = file_put_contents($path . $file, $msg_text);
     // check if it worked
@@ -228,7 +229,7 @@ function XMPP_ERROR_error_report($error) {
 /**
  * zip messages more than one month old
  * this still needs to be tested.
- * 
+ *
  * @global array $XMPP_ERROR
  */
 function XMPP_ERROR_archive() {
@@ -244,9 +245,9 @@ function XMPP_ERROR_archive() {
 }
 
 /**
- * The actual error handler. Will be called on each error and should filter for 
+ * The actual error handler. Will be called on each error and should filter for
  * items we do not care about
- * 
+ *
  * @global type $XMPP_ERROR
  * @param type $errno
  * @param type $errstr
@@ -256,7 +257,7 @@ function XMPP_ERROR_archive() {
  */
 function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     global $XMPP_ERROR;
-    
+
     // list to translate error numbers into error text
     $error_types = array(
         1 => 'E_ERROR',
@@ -285,7 +286,7 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     $errortype = $error_types[$errno];
 
     // get the current time
-    
+
     $time = XMPP_ERROR_ptime();
     // get the referrer
     $referer = 'n/a';
@@ -303,7 +304,7 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
 
 /**
  * When the script ends, check if an error happened. If so, send a message to XMPP
- * 
+ *
  * @global array $XMPP_ERROR
  */
 function XMPP_ERROR_shutdown_handler() {
@@ -341,13 +342,13 @@ function XMPP_ERROR_filter($err_no, $path) {
 
 /**
  * Reformat variabled into HTML-ready and readable text
- * 
+ *
  * @param type $data
  * @return string
  */
 function XMPP_ERROR_array2text($data) {
     $type = strtoupper(gettype($data));
-    
+
     $out = "$type: ";
     if (is_bool($data)) {
         if ($data) {
