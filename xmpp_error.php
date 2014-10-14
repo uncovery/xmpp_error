@@ -36,8 +36,6 @@ set_error_handler('XMPP_ERROR_handler');
 // define the function that will be called at the end of script execution
 register_shutdown_function("XMPP_ERROR_shutdown_handler");
 
-// XMPP_ERROR_trace(__FUNCTION__, func_get_args());
-
 /**
  * Register an error for tracking processes.
  * ideally will be called by entering the following line on top of your functions
