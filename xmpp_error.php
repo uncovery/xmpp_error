@@ -189,25 +189,29 @@ function XMPP_ERROR_error_report($error) {
     }
 
     // add the configured header for the attached message
-    $msg_text = $XMPP_ERROR['config']['reports_header'] . XMPP_ERROR_css();
+
+    // HTML header for the error reports
+    $msg_text = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    <html>
+        <head>
+            <title>[' . $XMPP_ERROR['config']['project_name'] . '] XMPP ERROR Report</title>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
+            . XMPP_ERROR_css() . '
+        </head>
+        <body>';
+
     // initialize the variable
     $main_error = '';
 
     // we have a main error that triggered the message
     $msg_text .= "<div class=\"main\"><h1>Main Error</h1>\n";
     // in case the main error is an array, print it nicely
-    if (is_array($error)) {
-        foreach ($error as $title => $text) {
-            $msg_text .= "<div class=\"main_sub\"><h2>$title:</h2>\n" . XMPP_ERROR_array2text($text) . "<br>\n";
-        }
-    } else if (is_object($error)) {
+    if (is_array($error) || is_object($error)) {
         $main_error .= "Multiple Variables";
-        $msg_text .= var_export($error, true);
     } else {
-        $msg_text .= "$error";
         $main_error .= $error;
     }
-    $msg_text .= "</div>\n";
+    $msg_text .=  XMPP_ERROR_array2text($error) . "</div>\n";
 
 
     // the actual function trace should be on top.
@@ -243,7 +247,7 @@ function XMPP_ERROR_error_report($error) {
     }
 
     // now add the configured footer
-    $msg_text .= $XMPP_ERROR['config']['reports_footer'];
+    $msg_text .= "    </body>\n</html>";
 
     // write the whole thing to a file
     $check = file_put_contents($path . $file, $msg_text);
@@ -320,7 +324,7 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
  */
 function XMPP_ERROR_shutdown_handler() {
     global $XMPP_ERROR;
-    XMPP_ERROR_trace("shutdown", "shutdown");
+    XMPP_ERROR_trace("XMPP_ERROR Status", "Script Shutdown");
     if ($XMPP_ERROR['error']) {
         XMPP_ERROR_error_report($XMPP_ERROR['error']);
     } else if ($XMPP_ERROR['error_manual']) {
@@ -354,36 +358,66 @@ function XMPP_ERROR_filter($err_no, $path) {
 /**
  * Reformat variabled into HTML-ready and readable text
  *
- * @param type $data
+ * @param type $variable
  * @return string
  */
-function XMPP_ERROR_array2text($data) {
-    $type = strtoupper(gettype($data));
+function XMPP_ERROR_array2text($variable) {
+    $string = '';
 
-    $out = "$type: ";
-    if (is_bool($data)) {
-        if ($data) {
-            return $out . "TRUE";
-        } else {
-            return $out . "FALSE";
-        }
-    } if (is_object($data)) {
-        return $out . var_export($data, true);
-    } else if (is_array($data)) {
-        $out .= "(" . count($data) . ")<ul>\n";
-        foreach ($data as $key => $value) {
-            if (!is_numeric($key)) {
-                $key = "'$key'";
+    switch(gettype($variable)) {
+        case 'boolean':
+            $string .= $variable ? 'true' : 'false';
+            break;
+        case 'integer':
+        case 'double':
+            $string .= $variable;
+            break;
+        case 'resource':
+            $string .= '[Resource]';
+            break;
+        case 'NULL':
+            $string .= "NULL";
+            break;
+        case 'unknown type':
+            $string .= '???';
+            break;
+        case 'string':
+            $string .= '"' . nl2br($variable) . '"';
+            break;
+        case 'array':
+            $len = count($variable);
+            $string .= " ($len) <ul>";
+            foreach ($variable as $key => $elem){
+                $string .= "<li><strong>$key</strong> &rArr; ";
+                if (count($elem) == 0) {
+                    $elem_string = "array()</li>";
+                } else {
+                    $elem_string = XMPP_ERROR_array2text($elem) . "</li>";
+                }
+                $string .= $elem_string;
             }
-            $out .="<li><strong>$key</strong> &rArr; "
-                . XMPP_ERROR_array2text($value)
-                . "</li>\n";
-        }
-        $out .= "</ul>";
-        return $out;
-    } else {
-        return $out . $data;
+            $string .= "</ul>";
+            break;
+        case 'object':
+            $hash = array();
+            foreach ($variable as $object) {
+                $hash[$object->id] = array('object' => $object);
+            }
+            $tree = array();
+            foreach($hash as $id => &$node) {
+                $parent = $node['object']->top_id;
+                if ($parent) {
+                    $hash[$parent]['children'][] =& $node;
+                } else {
+                    $tree[] =& $node;
+                }
+            }
+            unset($node, $hash);
+            $string =  XMPP_ERROR_array2text($tree, $strlen);
+            break;
     }
+
+    return $string;
 }
 
 /**
