@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2014 Uncovery
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ function XMPP_ERROR_archive() {
     // we allow definition of an alternative timezone to be more admin-friendly
     if ($XMPP_ERROR['config']['reports_timezone']) {
         $date_obj->setTimezone(new DateTimeZone($XMPP_ERROR['config']['reports_timezone']));
-    }    
+    }
     $year = $date_obj->format('Y');
     $month = $date_obj->format('m');
     $day = $date_obj->format('d');
@@ -50,7 +50,7 @@ function XMPP_ERROR_archive() {
         if (!$rm_check && $XMPP_ERROR['config']['self_track']) {
             XMPP_ERROR_trace("Archive remove $day_path failed");
         }
-    } else {
+    } else if ($XMPP_ERROR['config']['self_track']) {
         XMPP_ERROR_trace("No archive created", "PAth $day_path does not exist");
     }
 }
@@ -75,7 +75,7 @@ function XMPP_ERROR_delTree($dir){
 /**
  * Zip a folder
  * Source: http://stackoverflow.com/questions/1334613/how-to-recursively-zip-a-directory-in-php
- * 
+ *
  * @global type $XMPP_ERROR
  * @param type $source
  * @param type $destination
@@ -98,7 +98,7 @@ function XMPP_ERROR_zipTree($source, $destination) {
     $real_source = str_replace('\\', '/', realpath($source));
     if (is_dir($real_source) === true) {
         $files = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($real_source), 
+                new RecursiveDirectoryIterator($real_source),
                 RecursiveIteratorIterator::SELF_FIRST);
         foreach ($files as $file) {
             $file = str_replace('\\', '/', $file);
