@@ -21,3 +21,9 @@ h2, h1 {
     padding: 5px;
     margin-bottom: 10px;
 }
+
+#footer {
+    font-size:70%;
+    padding: 3px;
+    text-align:right;
+}
