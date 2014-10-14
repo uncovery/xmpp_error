@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2014 Uncovery
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  */
 
 global $XMPP_ERROR;
-require_once('config.php');
+require_once(__DIR__ . '/config.php');
 
 // this variable tracks if an actual error occured and is set in XMPP_ERROR_handler
 $XMPP_ERROR['error'] = false;
@@ -184,12 +184,12 @@ function XMPP_ERROR_error_report($error) {
     }
     // compress previous months items
     if ($XMPP_ERROR['config']['reports_archive_date']) {
-        require_once('archive.inc.php');
+        require_once(__DIR__ . '/archive.inc.php');
         XMPP_ERROR_archive();
     }
 
     // add the configured header for the attached message
-    $msg_text = $XMPP_ERROR['config']['reports_header'];
+    $msg_text = $XMPP_ERROR['config']['reports_header'] . XMPP_ERROR_css();
     // initialize the variable
     $main_error = '';
 
@@ -375,7 +375,7 @@ function XMPP_ERROR_array2text($data) {
             if (!is_numeric($key)) {
                 $key = "'$key'";
             }
-            $out .="<li><strong>$key</strong> => "
+            $out .="<li><strong>$key</strong> &rArr; "
                 . XMPP_ERROR_array2text($value)
                 . "</li>\n";
         }
@@ -396,4 +396,20 @@ function XMPP_ERROR_ptime() {
     $overall = $now - XMPP_ERROR_START_TIME;
     $time_str = number_format($overall, 3, ".", "'") . " sec";
     return $time_str;
+}
+
+/**
+ *
+ * @return type
+ */
+function XMPP_ERROR_css() {
+    $css = file_get_contents(__DIR__ . '/styles.css', FILE_USE_INCLUDE_PATH);
+    if (!$css) {
+        XMPP_ERROR_trigger("Could not find CSS File");
+    }
+    $out = "
+    <style type=\"text/css\">
+        $css
+    </style>";
+    return $out;
 }
