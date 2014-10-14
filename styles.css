@@ -1,4 +1,23 @@
 * {
     padding: 0px;
     margin: 0px;
+    font-family: arial;
+    font-size: 98%;
+}
+
+div {
+    border: 1px solid #00DDFF;
+    margin: 10px;
+    padding: 10px;
+    background-color:#DDFFFF;
+}
+
+ul {
+    margin-left:30px;
+}
+
+h2, h1 {
+    background-color:#00DDFF;
+    padding: 5px;
+    margin-bottom: 10px;
 }
