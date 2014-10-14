@@ -54,7 +54,13 @@ register_shutdown_function("XMPP_ERROR_shutdown_handler");
 function XMPP_ERROR_trace($type, $data) {
     global $XMPP_ERROR;
     // insert the current time and passed variables
-    $XMPP_ERROR[XMPP_ERROR_ptime()][$type] = $data;
+    // make sure that there is no entry at the same microsecond
+    if (!isset($XMPP_ERROR[XMPP_ERROR_ptime()][$type])) {
+        $XMPP_ERROR[XMPP_ERROR_ptime()][$type] = $data;
+    } else {
+        // otherwise create a sub-entry
+        $XMPP_ERROR[XMPP_ERROR_ptime()][][$type] = $data;
+    }
 }
 
 /**
