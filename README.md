@@ -76,6 +76,3 @@ A lightweight PHP error management tool that reports errors to you via XMPP/Jabb
         XMPP_ERROR_send_msg("A new user has registered on the site!");
     }
 ```
-
-#### ToDo:
-* Add CSS for the error messages
