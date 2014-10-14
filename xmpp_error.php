@@ -165,14 +165,15 @@ function XMPP_ERROR_error_report($error) {
     $hour = $date_obj->format('H');
     // this will be the final name of the file. Added some random element in the end to harden URL guessing
     // and prevent overwriting in case of 2 messages in the same microsencond
-    $now = $date_obj->format('Y-m-d_H:i:s') . substr((string)microtime(), 1, 8) . "_" . rand(0, 9999999999999);
+    $time_now = $date_obj->format('Y-m-d H:i:s') . substr((string)microtime(), 1, 8);
+    $rnd_now = str_replace(" ", "_", $time_now) . "_" . rand(0, 9999999999999);
 
     // path to store the attached message
     $path = $XMPP_ERROR['config']['reports_path'] . "/$year/$month/$day/$hour/";
     // url to reach the message
     $url = $XMPP_ERROR['config']['reports_url'] . "/$year/$month/$day/$hour/";
     // final filename
-    $file = "Error_$now.html";
+    $file = "Error_$rnd_now.html";
     // check if we need to create the directory
     if (!file_exists($path)) {
         // create the directory
@@ -204,7 +205,7 @@ function XMPP_ERROR_error_report($error) {
     $main_error = '';
 
     // we have a main error that triggered the message
-    $msg_text .= "<div class=\"main\"><h1>Main Error</h1>\n";
+    $msg_text .= "<div class=\"main_data\"><h1>Main Error ($time_now)</h1>\n";
     // in case the main error is an array, print it nicely
     if (is_array($error) || is_object($error)) {
         $main_error .= "Multiple Variables";
@@ -243,11 +244,12 @@ function XMPP_ERROR_error_report($error) {
 
     // now iterate those all and add them to the attached file
     foreach ($data as $title => $text) {
-        $msg_text .= "<div class=\"others\"><h2>$title:</h2>\n" . XMPP_ERROR_array2text($text) . "</div>\n";
+        $msg_text .= "<div class=\"data_block\"><h2>$title:</h2>\n" . XMPP_ERROR_array2text($text) . "</div>\n";
     }
 
     // now add the configured footer
-    $msg_text .= "    </body>\n</html>";
+    $msg_text .= "    <div id=\"footer\">Created with <a href=\"https://github.com/uncovery/xmpp_error\">XMPP_ERROR</a></div>"
+        . "    </body>\n</html>";
 
     // write the whole thing to a file
     $check = file_put_contents($path . $file, $msg_text);
@@ -382,7 +384,7 @@ function XMPP_ERROR_array2text($variable) {
             $string .= '???';
             break;
         case 'string':
-            $string .= '"' . nl2br($variable) . '"';
+            $string .= '"' . nl2br(htmlentities($variable), false) . '"';
             break;
         case 'array':
             $len = count($variable);
