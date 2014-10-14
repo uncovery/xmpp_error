@@ -54,7 +54,7 @@ register_shutdown_function("XMPP_ERROR_shutdown_handler");
 function XMPP_ERROR_trace($type, $data) {
     global $XMPP_ERROR;
     // insert the current time and passed variables
-    $XMPP_ERROR[XMPP_ERROR_ptime()][][$type] = $data;
+    $XMPP_ERROR[XMPP_ERROR_ptime()][$type] = $data;
 }
 
 /**
@@ -387,8 +387,7 @@ function XMPP_ERROR_array2text($variable) {
             $string .= '"' . nl2br(htmlentities($variable), false) . '"';
             break;
         case 'array':
-            $len = count($variable);
-            $string .= " ($len) <ul>";
+            $string .= " <ol>";
             foreach ($variable as $key => $elem){
                 $string .= "<li><strong>$key</strong> &rArr; ";
                 if (count($elem) == 0) {
@@ -398,7 +397,7 @@ function XMPP_ERROR_array2text($variable) {
                 }
                 $string .= $elem_string;
             }
-            $string .= "</ul>";
+            $string .= "</ol>";
             break;
         case 'object':
             $hash = array();
@@ -406,7 +405,7 @@ function XMPP_ERROR_array2text($variable) {
                 $hash[$object->id] = array('object' => $object);
             }
             $tree = array();
-            foreach($hash as $id => &$node) {
+            foreach($hash as &$node) {
                 $parent = $node['object']->top_id;
                 if ($parent) {
                     $hash[$parent]['children'][] =& $node;
@@ -415,7 +414,7 @@ function XMPP_ERROR_array2text($variable) {
                 }
             }
             unset($node, $hash);
-            $string =  XMPP_ERROR_array2text($tree, $strlen);
+            $string =  XMPP_ERROR_array2text($tree);
             break;
     }
 
@@ -430,7 +429,7 @@ function XMPP_ERROR_array2text($variable) {
 function XMPP_ERROR_ptime() {
     $now = microtime(true);
     $overall = $now - XMPP_ERROR_START_TIME;
-    $time_str = number_format($overall, 3, ".", "'") . " sec";
+    $time_str = number_format($overall, 6, ".", "'") . " sec";
     return $time_str;
 }
 
