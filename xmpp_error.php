@@ -169,7 +169,7 @@ function XMPP_ERROR_error_report($error) {
     $hour = $date_obj->format('H');
     // this will be the final name of the file. Added some random element in the end to harden URL guessing
     // and prevent overwriting in case of 2 messages in the same microsencond
-    $time_now = $date_obj->format('Y-m-d H:i:s') . substr((string)microtime(), 1, 8);
+    $time_now = $date_obj->format('Y-m-d H-i-s') . substr((string)microtime(), 1, 8);
     $rnd_now = str_replace(" ", "_", $time_now) . "_" . rand(0, 9999999999999);
 
     // path to store the attached message
