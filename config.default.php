@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2014 Uncovery
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,16 +81,3 @@ $XMPP_ERROR['config']['reports_archive_date'] = "7 days ago";
 // URL where the above files can be reached
 // no trailing slash
 $XMPP_ERROR['config']['reports_url'] = 'http://my_website.net/errors';
-
-// HTML header for the error reports
-$XMPP_ERROR['config']['reports_header'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-    <head>
-        <title>[' . $XMPP_ERROR['config']['project_name'] . '] XMPP ERROR Report</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    </head>
-    <body>';
-
-// HTML footer for the error reports
-$XMPP_ERROR['config']['reports_footer'] = '    </body>
-</html>';
