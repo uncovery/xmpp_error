@@ -21,6 +21,8 @@
  * changes required. You can modify it to add different error scenarios to
  * better understand XMPP_ERROR behavior.
  */
+echo "This is the xmpp_error test page<br>";
+
 require_once('xmpp_error.php');
 
 // test if JAXL Messages can be sent:
@@ -34,6 +36,8 @@ echo "$test";
 
 // testing a manual trigger
 testing_trigger();
+
+echo "Test page fully loaded";
 
 /**
  * Testing a trace in a function.
