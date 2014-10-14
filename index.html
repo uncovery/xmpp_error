@@ -1,38 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
 <html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Xmpp_error : A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages">
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+  <title>Xmpp_error</title>
+  <meta name="description" content="A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages">
 
-    <title>Xmpp_error</title>
-  </head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <body>
+</head>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/uncovery/xmpp_error">View on GitHub</a>
+<body>
 
-          <h1 id="project_title">Xmpp_error</h1>
-          <h2 id="project_tagline">A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages</h2>
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Xmpp_error</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/uncovery/xmpp_error/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/uncovery/xmpp_error/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/uncovery/xmpp_error" class="code">View Xmpp_error on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h4>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features:</h4>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/uncovery/xmpp_error/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/uncovery/xmpp_error/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="xmpp_error" class="anchor" href="#xmpp_error"><span class="octicon octicon-link"></span></a>XMPP_ERROR</h1>
+<ul>
+<li>Sending error messages of any level (error, warning, notice etc)</li>
+<li>Excluding certain error types or files from generating a message</li>
+<li>Tracking of functions and their arguments or variables throughout the script 
+to identify procedure paths taken and variable changes</li>
+<li>Millisecond-timing of all steps</li>
+<li>In-process errors from the start of the script until shutdown</li>
+<li>XMPP status messages outside of error reports to the client</li>
+<li>Multiple recipients for messages</li>
+</ul>
 
 <h4>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements:</h4>
@@ -45,20 +61,6 @@ receiving user or admin (client)</li>
 <li>A writable directory on your webserver where error reports are stored. Those
 are attached to the XMPP messages since they are too large to be sent. For 
 security reasons, you can make this directory password protected via .htaccess</li>
-</ul>
-
-<h4>
-<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features:</h4>
-
-<ul>
-<li>Sending error messages of any level (error, warning, notice etc)</li>
-<li>Excluding certain error types or files from generating a message</li>
-<li>Tracking of functions and their arguments or variables throughout the script 
-to identify procedure paths taken and variable changes</li>
-<li>Millisecond-timing of all steps</li>
-<li>In-process errors from the start of the script until shutdown</li>
-<li>XMPP status messages outside of error reports to the client</li>
-<li>Multiple recipients for messages</li>
 </ul>
 
 <h4>
@@ -134,18 +136,26 @@ error report, but rather a status message.</li>
         <span class="nx">XMPP_ERROR_send_msg</span><span class="p">(</span><span class="s2">"A new user has registered on the site!"</span><span class="p">);</span>
     <span class="p">}</span>
 </pre></div>
-      </section>
+        </article>
+      </div>
     </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/uncovery" class="avatar"><img src="https://avatars2.githubusercontent.com/u/583808?v=2&amp;s=60" width="48" height="48"></a> <a href="https://github.com/uncovery">uncovery</a> maintains <a href="https://github.com/uncovery/xmpp_error">Xmpp_error</a></p>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Xmpp_error maintained by <a href="https://github.com/uncovery">uncovery</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
 
-    
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="http://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/uncovery/xmpp_error/tarball/master" class="tar">tar</a><a href="https://github.com/uncovery/xmpp_error/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
 
-  </body>
+  
+</body>
 </html>
