@@ -2,15 +2,7 @@ XMPP_ERROR
 ==========
 
 A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages
-
-#### Requirements: 
-* JAXL: http://jaxl.readthedocs.org/en/latest/
-  This library will allow PHP to send XMPP/Jabber messages
-* 2 Jabber accounts: One for the sending PHP script (server), one for the 
-  receiving user or admin (client)
-* A writable directory on your webserver where error reports are stored. Those
-  are attached to the XMPP messages since they are too large to be sent. For 
-  security reasons, you can make this directory password protected via .htaccess
+Specially made for faster development and 
 
 #### Features:
 * Sending error messages of any level (error, warning, notice etc)
@@ -21,6 +13,15 @@ A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages
 * In-process errors from the start of the script until shutdown
 * XMPP status messages outside of error reports to the client
 * Multiple recipients for messages
+
+#### Requirements: 
+* JAXL: http://jaxl.readthedocs.org/en/latest/
+  This library will allow PHP to send XMPP/Jabber messages
+* 2 Jabber accounts: One for the sending PHP script (server), one for the 
+  receiving user or admin (client)
+* A writable directory on your webserver where error reports are stored. Those
+  are attached to the XMPP messages since they are too large to be sent. For 
+  security reasons, you can make this directory password protected via .htaccess
 
 #### Installation:
 * Setup the required 2 XMPP accounts on your XMPP server, the server account 
