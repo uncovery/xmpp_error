@@ -2,7 +2,6 @@ XMPP_ERROR
 ==========
 
 A lightweight PHP error reporting and tracking tool using XMPP/Jabber messages
-Specially made for faster development and 
 
 #### Features:
 * Sending error messages of any level (error, warning, notice etc)
