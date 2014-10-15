@@ -347,6 +347,10 @@ function XMPP_ERROR_shutdown_handler() {
  */
 function XMPP_ERROR_filter($err_no, $path) {
     global $XMPP_ERROR;
+    global $XMPP_ERROR;
+    if ($XMPP_ERROR['config']['self_track']) {
+        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+    }
     $ignore_errors = $XMPP_ERROR['config']['ignore_type'];
     $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
     if (in_array($err_no, $ignore_errors)) {
