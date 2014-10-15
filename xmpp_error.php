@@ -49,7 +49,7 @@ register_shutdown_function("XMPP_ERROR_shutdown_handler");
  * @param mixed $type
  * @param mixed $data
  */
-function XMPP_ERROR_trace($type, $data) {
+function XMPP_ERROR_trace($type, $data = '') {
     global $XMPP_ERROR;
     // insert the current time and passed variables
     // make sure that there is no entry at the same microsecond
