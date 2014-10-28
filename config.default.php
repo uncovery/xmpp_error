@@ -56,8 +56,8 @@ $XMPP_ERROR['config']['track_globals'] = array('MY_GLOBAL', 'OTHER_GLOBAL');
 // otherwise set to FALSE
 $XMPP_ERROR['config']['reports_timezone'] = 'Asia/Hong_Kong';
 
-// IF you want to ignore errors of certain files, please add a substring of the
-// pato to this array
+// If you want to ignore errors of certain files, please add a substring of the
+// path to this array; Error level 1 (E_ERROR) will still be reported
 $XMPP_ERROR['config']['ignore_warnings'] = array('jaxl');
 
 // If you want to ignore certain error types, please add the error numbers to
