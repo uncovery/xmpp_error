@@ -356,7 +356,7 @@ function XMPP_ERROR_filter($err_no, $path) {
     $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
     if (in_array($err_no, $ignore_errors)) {
         return false;
-    } else if ($err_no == 8) {
+    } else if ($err_no !== 1) {
         foreach ($ignore_path as $ignore_string) {
             if (strpos($path, $ignore_string) != false) {
                 return false;
