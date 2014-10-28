@@ -261,8 +261,11 @@ function XMPP_ERROR_error_report($error) {
     if (!$check) {
         die("could not write error file to path $path, please check permissions");
     }
+    if (isset($data['$_SERVER']['script_uri'])) {
+        $called_url = $data['$_SERVER']['script_uri'];
+    }
     // send the message with the URL to the attachement to XMPP client
-    XMPP_ERROR_send_msg("$main_error at $url$file");
+    XMPP_ERROR_send_msg("$main_error\nError Report: $url$file");
 }
 
 /**
@@ -307,16 +310,15 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     $errortype = $error_types[$errno];
 
     // get the current time
-
     $time = XMPP_ERROR_ptime();
     // get the referrer
-    $referer = 'n/a';
+    $referer = '';
     $s_server = filter_input_array(INPUT_SERVER, FILTER_SANITIZE_STRING);
     if (isset($s_server['HTTP_REFERER'])) {
-        $referer = $s_server['HTTP_REFERER'];
+        $referer = ", referer " . $s_server['HTTP_REFERER'];
     }
     // format the actual error message
-    $text = "$time $errortype: $errstr in line $errline of file $errfile, referer $referer";
+    $text = "$time $errortype: $errstr in line $errline of file $errfile$referer";
     // add the error to the list
     XMPP_ERROR_trace($errortype, $text);
     // register that we had an error so the shutdown handler sends an alert
@@ -346,7 +348,6 @@ function XMPP_ERROR_shutdown_handler() {
  * @return boolean
  */
 function XMPP_ERROR_filter($err_no, $path) {
-    global $XMPP_ERROR;
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
         XMPP_ERROR_trace(__FUNCTION__, func_get_args());
