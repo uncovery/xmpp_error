@@ -261,9 +261,6 @@ function XMPP_ERROR_error_report($error) {
     if (!$check) {
         die("could not write error file to path $path, please check permissions");
     }
-    if (isset($data['$_SERVER']['script_uri'])) {
-        $called_url = $data['$_SERVER']['script_uri'];
-    }
     // send the message with the URL to the attachement to XMPP client
     XMPP_ERROR_send_msg("$main_error\nError Report: $url$file");
 }
@@ -315,10 +312,14 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     $referer = '';
     $s_server = filter_input_array(INPUT_SERVER, FILTER_SANITIZE_STRING);
     if (isset($s_server['HTTP_REFERER'])) {
-        $referer = ", referer " . $s_server['HTTP_REFERER'];
+        $referer = "\nReferer: " . $s_server['HTTP_REFERER'];
+    }
+    $called_url = '';
+    if (isset($s_server['SCRIPT_URI'])) {
+        $called_url = "\nScript URL: " . $s_server['SCRIPT_URI'] . $s_server['QUERY_STRING'];
     }
     // format the actual error message
-    $text = "$time $errortype: $errstr in line $errline of file $errfile$referer";
+    $text = "$time\n$errortype: $errstr \nSource: Line $errline of file $errfile$referer$called_url";
     // add the error to the list
     XMPP_ERROR_trace($errortype, $text);
     // register that we had an error so the shutdown handler sends an alert
@@ -395,6 +396,9 @@ function XMPP_ERROR_array2text($variable) {
         case 'string':
             $string .= '"' . nl2br(htmlentities($variable), false) . '"';
             break;
+        case 'object':
+            $string .= nl2br(var_export($variable, true));
+            break;
         case 'array':
             $string .= " <ol>";
             foreach ($variable as $key => $elem){
@@ -407,23 +411,6 @@ function XMPP_ERROR_array2text($variable) {
                 $string .= $elem_string;
             }
             $string .= "</ol>";
-            break;
-        case 'object':
-            $hash = array();
-            foreach ($variable as $object) {
-                $hash[$object->id] = array('object' => $object);
-            }
-            $tree = array();
-            foreach($hash as &$node) {
-                $parent = $node['object']->top_id;
-                if ($parent) {
-                    $hash[$parent]['children'][] =& $node;
-                } else {
-                    $tree[] =& $node;
-                }
-            }
-            unset($node, $hash);
-            $string =  XMPP_ERROR_array2text($tree);
             break;
     }
 
