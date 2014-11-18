@@ -71,6 +71,7 @@ function XMPP_ERROR_trace($type, $data = '') {
 function XMPP_ERROR_trigger($text) {
     global $XMPP_ERROR;
     $XMPP_ERROR['error_manual'] = $text;
+    $XMPP_ERROR[XMPP_ERROR_ptime()]["Manual Trigger"] = $text;
 }
 
 
