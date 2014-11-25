@@ -41,6 +41,9 @@ $XMPP_ERROR['error_types'] = array(
     4096 => 'E_RECOVERABLE_ERROR',
     8192 => 'E_DEPRECATED',
     16384 => 'E_USER_DEPRECATED',
+    // non-standard error types specific for XMPP_ERROR
+    99998 => 'E_XMPP_TRIGGER',
+    99999 => 'E_XMPP_TRACE',
 );
 
 // this defines the start time of the whole script
@@ -72,11 +75,11 @@ function XMPP_ERROR_trace($type, $data = '') {
     global $XMPP_ERROR;
     // insert the current time and passed variables
     // make sure that there is no entry at the same microsecond
-    if (!isset($XMPP_ERROR[XMPP_ERROR_ptime()][$type])) {
-        $XMPP_ERROR[XMPP_ERROR_ptime()][$type] = $data;
+    if (!isset($XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRACE"])) {
+        $XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRACE"][$type] = $data;
     } else {
         // otherwise create a sub-entry
-        $XMPP_ERROR[XMPP_ERROR_ptime()][][$type] = $data;
+        $XMPP_ERROR[XMPP_ERROR_ptime()][]["E_XMPP_TRACE"][$type] = $data;
     }
 }
 
@@ -90,7 +93,7 @@ function XMPP_ERROR_trace($type, $data = '') {
 function XMPP_ERROR_trigger($text) {
     global $XMPP_ERROR;
     $XMPP_ERROR['error_manual'] = $text;
-    $XMPP_ERROR[XMPP_ERROR_ptime()]["Manual Trigger"] = $text;
+    $XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRIGGER"] = $text;
 }
 
 
