@@ -27,3 +27,7 @@ h2, h1 {
     padding: 3px;
     text-align:right;
 }
+
+.std_error {
+    color: crimson;
+}

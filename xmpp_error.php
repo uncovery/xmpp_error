@@ -24,6 +24,25 @@ $XMPP_ERROR['error'] = false;
 // this variable tracks if a manually triggered error and is set in XMPP_ERROR_handler
 $XMPP_ERROR['error_manual'] = false;
 
+    // list to translate error numbers into error text
+$XMPP_ERROR['error_types'] = array(
+    1 => 'E_ERROR',
+    2 => 'E_WARNING',
+    4 => 'E_PARSE',
+    8 => 'E_NOTICE',
+    16 => 'E_CORE_ERROR',
+    32 => 'E_CORE_WARNING',
+    64 => 'E_COMPILE_ERROR',
+    128 => 'E_COMPILE_WARNING',
+    256 => 'E_USER_ERROR',
+    512 => 'E_USER_WARNING',
+    1024 => 'E_USER_NOTICE',
+    2048 => 'E_STRICT',
+    4096 => 'E_RECOVERABLE_ERROR',
+    8192 => 'E_DEPRECATED',
+    16384 => 'E_USER_DEPRECATED',
+);
+
 // this defines the start time of the whole script
 // if XMPP_ERROR is included too late in the script, this number will not
 // be representative
@@ -281,24 +300,7 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     global $XMPP_ERROR;
 
     // list to translate error numbers into error text
-    $error_types = array(
-        1 => 'E_ERROR',
-        2 => 'E_WARNING',
-        4 => 'E_PARSE',
-        8 => 'E_NOTICE',
-        16 => 'E_CORE_ERROR',
-        32 => 'E_CORE_WARNING',
-        64 => 'E_COMPILE_ERROR',
-        128 => 'E_COMPILE_WARNING',
-        256 => 'E_USER_ERROR',
-        512 => 'E_USER_WARNING',
-        1024 => 'E_USER_NOTICE',
-        2048 => 'E_STRICT',
-        4096 => 'E_RECOVERABLE_ERROR',
-        8192 => 'E_DEPRECATED',
-        16384 => 'E_USER_DEPRECATED',
-    );
-
+    $error_types = $XMPP_ERROR['error_types'];
     // make sure we care about the error
     $check = XMPP_ERROR_filter($errno, $errfile);
     if (!$check) {
@@ -375,6 +377,7 @@ function XMPP_ERROR_filter($err_no, $path) {
  * @return string
  */
 function XMPP_ERROR_array2text($variable) {
+    global $XMPP_ERROR;
     $string = '';
 
     switch(gettype($variable)) {
@@ -403,7 +406,11 @@ function XMPP_ERROR_array2text($variable) {
         case 'array':
             $string .= " <ol>";
             foreach ($variable as $key => $elem){
-                $string .= "<li><strong>$key</strong> &rArr; ";
+                $class = '';
+                if (in_array($key, $XMPP_ERROR['error_types'])) {
+                    $class = "std_error";
+                }
+                $string .= "<li $class><strong>$key</strong> &rArr; ";
                 if (count($elem) == 0) {
                     $elem_string = "array()</li>";
                 } else {
