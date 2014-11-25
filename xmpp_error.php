@@ -410,7 +410,7 @@ function XMPP_ERROR_array2text($variable) {
             $string .= " <ol>";
             foreach ($variable as $key => $elem){
                 $class = '';
-                if (in_array($key, $XMPP_ERROR['error_types'])) {
+                if (strstr($key, 'XMPP')) {
                     $class = "std_error";
                 }
                 $string .= "<li $class><strong>$key</strong> &rArr; ";
