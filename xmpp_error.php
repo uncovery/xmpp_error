@@ -322,7 +322,10 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     }
     $called_url = '';
     if (isset($s_server['SCRIPT_URI'])) {
-        $called_url = "\nScript URL: " . $s_server['SCRIPT_URI'] . "?" . $s_server['QUERY_STRING'];
+        $called_url = "\nScript URL: " . $s_server['SCRIPT_URI'];
+        if (isset($s_server['QUERY_STRING'])) { 
+            $called_url .= "?" . $s_server['QUERY_STRING'];
+        }
     }
     // format the actual error message
     $text = "$time\n$errortype: $errstr \nSource: Line $errline of file $errfile$referer$called_url";
