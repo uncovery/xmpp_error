@@ -241,13 +241,13 @@ function XMPP_ERROR_error_report($error) {
     }
     $msg_text .=  XMPP_ERROR_array2text($error) . "</div>\n";
 
-
     // the actual function trace should be on top.
     // strip the XMPP config from report without changing it
     $xmpp_report = $XMPP_ERROR;
     unset($xmpp_report['config']);
     unset($xmpp_report['error']);
     unset($xmpp_report['error_manual']);
+    unset($xmpp_report['error_types']);
     $data['$XMPP_ERROR'] = $xmpp_report;
 
     // iterate the configured globals and add them to the list
