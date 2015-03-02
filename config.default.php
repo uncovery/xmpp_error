@@ -50,6 +50,9 @@ $XMPP_ERROR['config']['xmpp_recipient'] = array('recipient1@google.com');
 // shutdown
 $XMPP_ERROR['config']['track_globals'] = array('MY_GLOBAL', 'OTHER_GLOBAL');
 
+// track if the same function was called with the same arguments more than once
+$XMPP_ERROR['config']['track_doublecalls'] = false;
+
 // if you want to the error report time stampts match your current timezone,
 // set this variable to a valid Unix Timezone
 // (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)

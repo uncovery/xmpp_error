@@ -323,7 +323,7 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     $called_url = '';
     if (isset($s_server['SCRIPT_URI'])) {
         $called_url = "\nScript URL: " . $s_server['SCRIPT_URI'];
-        if (isset($s_server['QUERY_STRING'])) { 
+        if (isset($s_server['QUERY_STRING'])) {
             $called_url .= "?" . $s_server['QUERY_STRING'];
         }
     }
@@ -342,11 +342,40 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
  */
 function XMPP_ERROR_shutdown_handler() {
     global $XMPP_ERROR;
+
+    if ($XMPP_ERROR['config']['track_doublecalls']) {
+        XMPP_ERROR_check_doublecalls();
+    }
+
     XMPP_ERROR_trace("XMPP_ERROR Status", "Script Shutdown");
     if ($XMPP_ERROR['error']) {
         XMPP_ERROR_error_report($XMPP_ERROR['error']);
     } else if ($XMPP_ERROR['error_manual']) {
         XMPP_ERROR_error_report($XMPP_ERROR['error_manual']);
+    }
+}
+
+/**
+ * Iterates the trace calls and checks if the same arguments
+ * have been passed twice. This can check if the same function
+ * was called with the same arguments twice
+ * 
+ * @global type $XMPP_ERROR
+ */
+function XMPP_ERROR_check_doublecalls() {
+    global $XMPP_ERROR;
+    $check = array();
+    // check if the same function was called with the same argument more than once
+    // $XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRACE"][$type] = $data;
+    foreach ($XMPP_ERROR as $trace) {
+        if ($trace == 'E_XMPP_TRACE') {
+            foreach ($trace as $type => $data) {
+                if ($check[$type] == $data) {
+                    XMPP_ERROR_trigger("Function $type was called with same arguments more than twice: " . var_export($data, true));
+                }
+                $check[$type] = $data;
+            }
+        }
     }
 }
 
