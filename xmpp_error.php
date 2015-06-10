@@ -196,7 +196,7 @@ function XMPP_ERROR_error_report($error) {
     $rnd_now = str_replace(" ", "_", $time_now) . "_" . rand(0, 9999999999999);
 
     // path to store the attached message
-    $path = $XMPP_ERROR['config']['reports_path'] . "/$year/$month/$day/$hour/";
+    $path = $XMPP_ERROR['config']['reports_path'] . "/$year/$month/$day/$hour";
     // url to reach the message
     $url = $XMPP_ERROR['config']['reports_url'] . "/$year/$month/$day/$hour/";
     // final filename
@@ -207,6 +207,7 @@ function XMPP_ERROR_error_report($error) {
         $check = mkdir($path, 0777, true);
         // did it work?
         if (!$check) {
+            XMPP_ERROR_send_msg("Could not create path $path, please check permissions");
             die("Could not create path $path, please check permissions");
         }
     }
@@ -279,9 +280,10 @@ function XMPP_ERROR_error_report($error) {
         . "    </body>\n</html>";
 
     // write the whole thing to a file
-    $check = file_put_contents($path . $file, $msg_text);
+    $check = file_put_contents($path . "/" . $file, $msg_text);
     // check if it worked
     if (!$check) {
+        XMPP_ERROR_send_msg("could not write error file to path $path, please check permissions");
         die("could not write error file to path $path, please check permissions");
     }
     // send the message with the URL to the attachement to XMPP client
