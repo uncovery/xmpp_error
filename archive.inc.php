@@ -24,6 +24,11 @@
  */
 function XMPP_ERROR_archive() {
     global $XMPP_ERROR;
+
+    if (!$XMPP_ERROR['config']['reports_archive_date']) {
+        return;
+    }
+
     // get the relative day
     $date_obj = new DateTime($XMPP_ERROR['config']['reports_archive_date']);
     // we allow definition of an alternative timezone to be more admin-friendly
