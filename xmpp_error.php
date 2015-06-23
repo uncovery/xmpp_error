@@ -53,10 +53,13 @@ if (!defined ('XMPP_ERROR_START_TIME')) {
     define('XMPP_ERROR_START_TIME', microtime(true));
 }
 
-// definre the function that will be called in case of an error
-set_error_handler('XMPP_ERROR_handler');
-// define the function that will be called at the end of script execution
-register_shutdown_function("XMPP_ERROR_shutdown_handler");
+// only do this if the whole system is enabled.
+if ($XMPP_ERROR['config']['enabled']) {
+    // definre the function that will be called in case of an error
+    set_error_handler('XMPP_ERROR_handler');
+    // define the function that will be called at the end of script execution
+    register_shutdown_function("XMPP_ERROR_shutdown_handler");
+}
 
 /**
  * Register an error for tracking processes.
@@ -361,7 +364,7 @@ function XMPP_ERROR_shutdown_handler() {
  * Iterates the trace calls and checks if the same arguments
  * have been passed twice. This can check if the same function
  * was called with the same arguments twice
- * 
+ *
  * @global type $XMPP_ERROR
  */
 function XMPP_ERROR_check_doublecalls() {
