@@ -16,6 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Set this here to 'false' in case you want to disable the whole system.
+$XMPP_ERROR['config']['enabled'] = true;
+
 // description to be inserted into the error reports
 // This should be added in case several projects use this library to report errors
 $XMPP_ERROR['config']['project_name'] = 'My Website';
