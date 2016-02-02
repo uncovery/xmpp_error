@@ -204,16 +204,7 @@ function XMPP_ERROR_error_report($error) {
     $url = $XMPP_ERROR['config']['reports_url'] . "/$year/$month/$day/$hour/";
     // final filename
     $file = "Error_$rnd_now.html";
-    // check if we need to create the directory
-    if (!file_exists($path)) {
-        // create the directory
-        $check = mkdir($path, 0777, true);
-        // did it work?
-        if (!$check) {
-            XMPP_ERROR_send_msg("Could not create path $path, please check permissions");
-            die("Could not create path $path, please check permissions");
-        }
-    }
+
     // compress previous months items
     if ($XMPP_ERROR['config']['reports_archive_date']) {
         require_once(__DIR__ . '/archive.inc.php');
@@ -282,11 +273,25 @@ function XMPP_ERROR_error_report($error) {
     $msg_text .= "    <div id=\"footer\">Created with <a href=\"https://github.com/uncovery/xmpp_error\">XMPP_ERROR</a></div>"
         . "    </body>\n</html>";
 
+    // check if we need to create the directory
+    if (!file_exists($path)) {
+        // create the directory
+        $check = mkdir($path, 0777, true);
+        // did it work?
+        if (!$check) {
+            // strip HTML from message text
+            require_once('/home/includes/html2text/html2text.php');
+            $no_html = convert_html_to_text($msg_text);
+            XMPP_ERROR_send_msg("Could not create path $path, please check permissions\n$no_html");
+            die("Could not create path $path, please check permissions");
+        }
+    }
+
     // write the whole thing to a file
     $check = file_put_contents($path . "/" . $file, $msg_text);
     // check if it worked
     if (!$check) {
-        XMPP_ERROR_send_msg("could not write error file to path $path, please check permissions");
+        XMPP_ERROR_send_msg("could not write error file to path $path, please check permissions\n $msg_text");
         die("could not write error file to path $path, please check permissions");
     }
     // send the message with the URL to the attachement to XMPP client
