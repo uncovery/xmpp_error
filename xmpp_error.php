@@ -311,7 +311,6 @@ function XMPP_ERROR_path_make($root, $path_arr) {
     $newpath = $root . "/";
     foreach ($path_arr as $subfolder) {
         $newpath .= $subfolder;
-        XMPP_ERROR_send_msg($newpath);
         if (!file_exists($newpath)) {
             $check = mkdir($newpath, 0777, true);
             $newpath .= "/";
