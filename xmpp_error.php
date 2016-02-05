@@ -276,7 +276,7 @@ function XMPP_ERROR_error_report($error) {
     // check if we need to create the directory
     if (!file_exists($path)) {
         // create the directory
-        $check = mkdir($path, 0777, true);
+        $check = XMPP_ERROR_path_make($XMPP_ERROR['config']['reports_path'], array("$year","$month","$day","$hour"));
         // did it work?
         if (!$check) {
             // strip HTML from message text
@@ -291,11 +291,36 @@ function XMPP_ERROR_error_report($error) {
     $check = file_put_contents($path . "/" . $file, $msg_text);
     // check if it worked
     if (!$check) {
-        XMPP_ERROR_send_msg("could not write error file to path $path, please check permissions\n $msg_text");
+        $no_html = convert_html_to_text($msg_text);
+        XMPP_ERROR_send_msg("could not write error file to path $path, please check permissions\n $no_html");
         die("could not write error file to path $path, please check permissions");
     }
     // send the message with the URL to the attachement to XMPP client
     XMPP_ERROR_send_msg("$main_error\nError Report: $url$file");
+}
+
+/**
+ * XMPP ERROR internal function
+ * Creates the paths needed to store error reports and makes them writable for further writes
+ * 
+ * @param type $root
+ * @param type $path_arr
+ * @return boolean|string
+ */
+function XMPP_ERROR_path_make($root, $path_arr) {
+    $newpath = $root . "/";
+    foreach ($path_arr as $subfolder) {
+        $newpath .= $subfolder;
+        XMPP_ERROR_send_msg($newpath);
+        if (!file_exists($newpath)) {
+            $check = mkdir($newpath, 0777, true);
+            $newpath .= "/";
+            if (!$check) {
+                return false;
+            }
+        }
+    }
+    return $newpath;
 }
 
 /**
