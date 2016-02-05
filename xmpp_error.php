@@ -282,7 +282,7 @@ function XMPP_ERROR_error_report($error) {
             // strip HTML from message text
             require_once('/home/includes/html2text/html2text.php');
             $no_html = convert_html_to_text($msg_text);
-            XMPP_ERROR_send_msg("Could not create path $path, please check permissions\n$no_html");
+            XMPP_ERROR_send_msg($no_html);
             die("Could not create path $path, please check permissions");
         }
     }
@@ -315,6 +315,7 @@ function XMPP_ERROR_path_make($root, $path_arr) {
             $check = mkdir($newpath, 0777, true);
             $newpath .= "/";
             if (!$check) {
+                XMPP_ERROR_send_msg("Could not create path $newpath, please check permissions\n");
                 return false;
             }
         }
