@@ -291,6 +291,7 @@ function XMPP_ERROR_error_report($error) {
     $check = file_put_contents($path . "/" . $file, $msg_text);
     // check if it worked
     if (!$check) {
+        require_once('/home/includes/html2text/html2text.php');
         $no_html = convert_html_to_text($msg_text);
         XMPP_ERROR_send_msg("could not write error file to path $path, please check permissions\n $no_html");
         die("could not write error file to path $path, please check permissions");
@@ -313,12 +314,12 @@ function XMPP_ERROR_path_make($root, $path_arr) {
         $newpath .= $subfolder;
         if (!file_exists($newpath)) {
             $check = mkdir($newpath, 0777, true);
-            $newpath .= "/";
             if (!$check) {
                 XMPP_ERROR_send_msg("Could not create path $newpath, please check permissions\n");
                 return false;
             }
         }
+        $newpath .= "/";
     }
     return $newpath;
 }
