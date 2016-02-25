@@ -76,14 +76,7 @@ if ($XMPP_ERROR['config']['enabled']) {
  */
 function XMPP_ERROR_trace($type, $data = '') {
     global $XMPP_ERROR;
-    // insert the current time and passed variables
-    // make sure that there is no entry at the same microsecond
-    if (!isset($XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRACE"])) {
-        $XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRACE"][$type] = $data;
-    } else {
-        // otherwise create a sub-entry
-        $XMPP_ERROR[XMPP_ERROR_ptime()][]["E_XMPP_TRACE"][$type] = $data;
-    }
+    $XMPP_ERROR[XMPP_ERROR_ptime()][]["E_XMPP_TRACE"][(string)$type] = $data;
 }
 
 /**
