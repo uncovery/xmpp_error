@@ -76,7 +76,10 @@ if ($XMPP_ERROR['config']['enabled']) {
  */
 function XMPP_ERROR_trace($type, $data = '') {
     global $XMPP_ERROR;
-    $XMPP_ERROR[XMPP_ERROR_ptime()][]["E_XMPP_TRACE"][(string)$type] = $data;
+    if (is_array($type)) {
+        $type = var_export($type, true);
+    }
+    $XMPP_ERROR[XMPP_ERROR_ptime()][]["E_XMPP_TRACE"][$type] = $data;
 }
 
 /**
