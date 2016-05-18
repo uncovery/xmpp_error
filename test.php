@@ -48,7 +48,7 @@ echo "Test page fully loaded";
  * @param type $c
  */
 function testing_trace($a, $b, $c) {
-    XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+    XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
 }
 
 /**

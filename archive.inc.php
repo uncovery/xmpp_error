@@ -89,7 +89,7 @@ function XMPP_ERROR_delTree($dir){
 function XMPP_ERROR_zipTree($source, $destination) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
     }
     if (!extension_loaded('zip') || !file_exists($source)) {
         return false;

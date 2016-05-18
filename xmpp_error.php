@@ -64,7 +64,7 @@ if ($XMPP_ERROR['config']['enabled']) {
 /**
  * Register an error for tracking processes.
  * ideally will be called by entering the following line on top of your functions
- * XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+ * XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
  * Above code will register the function name and the associated arguments
  * You can also replace the two arguments with other information you want to track
  * throughout your script such as
@@ -108,7 +108,7 @@ function XMPP_ERROR_trigger($text) {
 function XMPP_ERROR_send_msg($msg) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
     }
 
     // assume we use JAXL, if other systems should be used, those would have to branch here
@@ -175,7 +175,7 @@ function XMPP_ERROR_send_msg($msg) {
 function XMPP_ERROR_error_report($error) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
     }
 
     // date creation
@@ -248,12 +248,7 @@ function XMPP_ERROR_error_report($error) {
     }
 
     // add a tack trace
-    $stack_trace = null;
-    $trace = debug_backtrace();
-    if (isset($trace[2])) {
-        $stack_trace = $trace[2];
-    }
-    $data['Stack Trace'] = $stack_trace;
+    $data['Stack Trace'] = XMPP_ERROR_stack_trace();
     // add other variables
     $data['$_POST'] = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
     $data['$_GET'] = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
@@ -422,8 +417,13 @@ function XMPP_ERROR_check_doublecalls() {
 function XMPP_ERROR_filter($err_no, $path) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
     }
+
+    if ($XMPP_ERROR['config']['include_warnings'] && !strpos($path, $XMPP_ERROR['config']['include_warnings'])) {
+        return false;
+    }
+
     $ignore_errors = $XMPP_ERROR['config']['ignore_type'];
     $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
     if (in_array($err_no, $ignore_errors)) {
@@ -519,4 +519,21 @@ function XMPP_ERROR_css() {
         $css
     </style>";
     return $out;
+}
+
+function XMPP_ERROR_stack_trace() {
+    $e = new Exception();
+    $trace_back = explode("\n", $e->getTraceAsString());
+    // reverse array to make steps line up chronologically
+    $trace = array_reverse($trace_back);
+    array_shift($trace); // remove {main}
+    array_pop($trace); // remove call to this method
+    $length = count($trace);
+    $result = array();
+
+    for ($i = 0; $i < $length; $i++) {
+        $result[$i + 1] = substr($trace[$i], strpos($trace[$i], ' '));
+    }
+
+    return $result;
 }
