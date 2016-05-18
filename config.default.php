@@ -66,6 +66,10 @@ $XMPP_ERROR['config']['reports_timezone'] = 'Asia/Hong_Kong';
 // path to this array; Error level 1 (E_ERROR) will still be reported
 $XMPP_ERROR['config']['ignore_warnings'] = array('jaxl');
 
+// any string here will make the system ignore ALL warnings that to not contain it.
+// this basically voids the above setting. Set false to disable
+$XMPP_ERROR['config']['include_warnings'] = false;
+
 // If you want to ignore certain error types, please add the error numbers to
 // this array.
 // For the full list see http://hk1.php.net/manual/en/errorfunc.constants.php
