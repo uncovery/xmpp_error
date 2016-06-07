@@ -64,7 +64,7 @@ if ($XMPP_ERROR['config']['enabled']) {
 /**
  * Register an error for tracking processes.
  * ideally will be called by entering the following line on top of your functions
- * XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
+ * XMPP_ERROR_trace(__FUNCTION__, func_get_args());
  * Above code will register the function name and the associated arguments
  * You can also replace the two arguments with other information you want to track
  * throughout your script such as
@@ -108,7 +108,7 @@ function XMPP_ERROR_trigger($text) {
 function XMPP_ERROR_send_msg($msg) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
     }
 
     // assume we use JAXL, if other systems should be used, those would have to branch here
@@ -175,7 +175,7 @@ function XMPP_ERROR_send_msg($msg) {
 function XMPP_ERROR_error_report($error) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
     }
 
     // date creation
@@ -417,7 +417,7 @@ function XMPP_ERROR_check_doublecalls() {
 function XMPP_ERROR_filter($err_no, $path) {
     global $XMPP_ERROR;
     if ($XMPP_ERROR['config']['self_track']) {
-        XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
+        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
     }
 
     if ($XMPP_ERROR['config']['include_warnings'] && !strpos($path, $XMPP_ERROR['config']['include_warnings'])) {
