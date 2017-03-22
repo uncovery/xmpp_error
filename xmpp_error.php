@@ -79,7 +79,13 @@ function XMPP_ERROR_trace($type, $data = '') {
     if (is_array($type)) {
         $type = var_export($type, true);
     }
-    $XMPP_ERROR[XMPP_ERROR_ptime()][]["E_XMPP_TRACE"][$type] = $data;
+    $time = XMPP_ERROR_ptime();
+    if (isset($XMPP_ERROR[$time])) {
+        XMPP_ERROR_trace($type, $data);
+    } else {
+        $XMPP_ERROR[$time]["E_XMPP_TRACE"][$type] = $data;
+    }
+    
 }
 
 /**
@@ -93,6 +99,10 @@ function XMPP_ERROR_trigger($text) {
     global $XMPP_ERROR;
     $XMPP_ERROR['error_manual'] = $text;
     $XMPP_ERROR[XMPP_ERROR_ptime()]["E_XMPP_TRIGGER"] = $text;
+    $XMPP_ERROR['triggers'][] = array(
+        'text' => $text,
+        //'trace' => array_reverse(debug_backtrace()),
+    );
 }
 
 
@@ -235,6 +245,7 @@ function XMPP_ERROR_error_report($error) {
     // the actual function trace should be on top.
     // strip the XMPP config from report without changing it
     $xmpp_report = $XMPP_ERROR;
+    unset($xmpp_report['triggers']);
     unset($xmpp_report['config']);
     unset($xmpp_report['error']);
     unset($xmpp_report['error_manual']);
@@ -248,10 +259,11 @@ function XMPP_ERROR_error_report($error) {
     }
 
     // add a tack trace
-    $data['Stack Trace'] = XMPP_ERROR_stack_trace();
+    $data['triggers'] = $XMPP_ERROR['triggers']; //XMPP_ERROR_stack_trace();
     // add other variables
-    $data['$_POST'] = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    $data['$_GET'] = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
+    // $data['Stack trace'] = array_reverse(debug_backtrace());
+    $data['$_POST'] = XMPP_ERROR_replace_text(filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING));
+    $data['$_GET'] = XMPP_ERROR_replace_text(filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING));
     $data['$_COOKIE'] = filter_input_array(INPUT_COOKIE, FILTER_SANITIZE_STRING);
     $data['$_SERVER'] = filter_input_array(INPUT_SERVER, FILTER_SANITIZE_STRING);
 
@@ -289,6 +301,16 @@ function XMPP_ERROR_error_report($error) {
     }
     // send the message with the URL to the attachement to XMPP client
     XMPP_ERROR_send_msg("$main_error\nError Report: $url$file");
+}
+
+function XMPP_ERROR_replace_text($input) {
+    $replace = array(
+        '&#34;' => '"',
+    );
+    foreach ($replace as $search => $string) {
+        $input = str_replace($search, $string, $input);
+    }
+    return $input;
 }
 
 /**
@@ -359,6 +381,7 @@ function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     $text = "$time\n$errortype: $errstr \nSource: Line $errline of file $errfile$referer$called_url";
     // add the error to the list
     XMPP_ERROR_trace($errortype, $text);
+    $XMPP_ERROR['triggers'][] = array('text' => "$errortype: $text");
     // register that we had an error so the shutdown handler sends an alert
     $XMPP_ERROR['error'] = $text;
 }
@@ -472,7 +495,7 @@ function XMPP_ERROR_array2text($variable) {
             $string .= nl2br(var_export($variable, true));
             break;
         case 'array':
-            $string .= " <ol>";
+            $string .= " <ol>\n";
             foreach ($variable as $key => $elem){
                 $class = '';
                 if (strstr($key, 'XMPP')) {
@@ -480,13 +503,13 @@ function XMPP_ERROR_array2text($variable) {
                 }
                 $string .= "<li $class><strong>$key</strong> &rArr; ";
                 if (count($elem) == 0) {
-                    $elem_string = "array()</li>";
+                    $elem_string = "array()</li>\n";
                 } else {
-                    $elem_string = XMPP_ERROR_array2text($elem) . "</li>";
+                    $elem_string = XMPP_ERROR_array2text($elem) . "</li>\n";
                 }
                 $string .= $elem_string;
             }
-            $string .= "</ol>";
+            $string .= "</ol>\n";
             break;
     }
 
@@ -522,8 +545,9 @@ function XMPP_ERROR_css() {
 }
 
 function XMPP_ERROR_stack_trace() {
-    $e = new Exception();
-    $trace_back = explode("\n", $e->getTraceAsString());
+    //$e = new Exception();
+    //$trace_back = explode("\n", $e->getTraceAsString());
+    $trace_back = debug_backtrace();
     // reverse array to make steps line up chronologically
     $trace = array_reverse($trace_back);
     array_shift($trace); // remove {main}
