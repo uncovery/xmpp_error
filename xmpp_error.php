@@ -83,7 +83,7 @@ function XMPP_ERROR_trace($type, $data = '') {
     if (isset($XMPP_ERROR[$time])) {
         XMPP_ERROR_trace($type, $data);
     } else {
-        $XMPP_ERROR[$time]["E_XMPP_TRACE"][$type] = $data;
+        $XMPP_ERROR["$time: E_XMPP_TRACE"][$type] = $data;
     }
     
 }
@@ -500,8 +500,10 @@ function XMPP_ERROR_array2text($variable) {
                 $class = '';
                 if (strstr($key, 'XMPP')) {
                     $class = "std_error";
+                } else {
+                    $class = "details";
                 }
-                $string .= "<li $class><strong>$key</strong> &rArr; ";
+                $string .= "<li class=\"$class\"><span>$key</span> &rArr; ";
                 if (count($elem) == 0) {
                     $elem_string = "array()</li>\n";
                 } else {
