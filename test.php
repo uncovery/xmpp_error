@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2014 Uncovery
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ XMPP_ERROR_send_msg("This is a test XMPP Message");
 testing_trace(1,2,3);
 
 // testing a notice for an non-initialized variable
-echo "$test";
+echo "test";
 
 // testing a manual trigger
 testing_trigger();
@@ -48,7 +48,7 @@ echo "Test page fully loaded";
  * @param type $c
  */
 function testing_trace($a, $b, $c) {
-    XMPP_ERROR_trace(__FUNCTION__, funcd_get_args());
+    XMPP_ERROR_trace(__FUNCTION__, func_get_args());
 }
 
 /**

@@ -18,13 +18,14 @@
 
 global $XMPP_ERROR;
 require_once(__DIR__ . '/config.php');
+require_once(__DIR__ . '/lib_sendxmpp.php');
 
 // this variable tracks if an actual error occured and is set in XMPP_ERROR_handler
 $XMPP_ERROR['error'] = false;
 // this variable tracks if a manually triggered error and is set in XMPP_ERROR_handler
 $XMPP_ERROR['error_manual'] = false;
 
-    // list to translate error numbers into error text
+// list to translate error numbers into error text
 $XMPP_ERROR['error_types'] = array(
     1 => 'E_ERROR',
     2 => 'E_WARNING',
@@ -55,7 +56,7 @@ if (!defined ('XMPP_ERROR_START_TIME')) {
 
 // only do this if the whole system is enabled.
 if ($XMPP_ERROR['config']['enabled']) {
-    // definre the function that will be called in case of an error
+    // define the function that will be called in case of an error
     set_error_handler('XMPP_ERROR_handler');
     // define the function that will be called at the end of script execution
     register_shutdown_function("XMPP_ERROR_shutdown_handler");
@@ -85,7 +86,7 @@ function XMPP_ERROR_trace($type, $data = '') {
     } else {
         $XMPP_ERROR["$time: E_XMPP_TRACE"][$type] = $data;
     }
-    
+
 }
 
 /**
@@ -121,13 +122,6 @@ function XMPP_ERROR_send_msg($msg) {
         XMPP_ERROR_trace(__FUNCTION__, func_get_args());
     }
 
-    // assume we use JAXL, if other systems should be used, those would have to branch here
-    if ($XMPP_ERROR['config']['xmpp_lib_name'] == 'JAXL') {
-        require_once $XMPP_ERROR['config']['xmpp_lib_path'] . '/jaxl.php';
-        require_once $XMPP_ERROR['config']['xmpp_lib_path'] . '/xmpp/xmpp_msg.php';
-    } else {
-        die('currently, XMPP_ERROR only supports JAXL as a xmpp sending module');
-    }
 
     // current time
     $date_obj = new DateTime();
@@ -143,36 +137,20 @@ function XMPP_ERROR_send_msg($msg) {
         $msg = var_export($msg, true);
     }
 
-    global $client, $message;
+    global $message;
     // actual message
     $message = '[' . $XMPP_ERROR['config']['project_name'] . "] $today: $msg";
 
-    // configure the XMPP Client to send hte message
-    $client = new JAXL(array(
-        'jid' => $XMPP_ERROR['config']['xmpp_sender_username'],
-        'pass' => $XMPP_ERROR['config']['xmpp_sender_password'],
-        'auth_type' => $XMPP_ERROR['config']['xmpp_sender_auth-type'],
-        'log_level' => JAXL_ERROR,
-        'strict' => false,
-    ));
-    // add the message
-    $client->add_cb('on_auth_success', function() {
-        global $client, $message, $XMPP_ERROR;
-        foreach ($XMPP_ERROR['config']['xmpp_recipient'] as $recipient) {
-            $client->send_chat_msg($recipient, $message);
-        }
-        $client->send_end_stream();
-    });
-
-    // sending of message failed?
-    $client->add_cb('on_auth_failure', function($reason) {
-        global $client;
-        $client->send_end_stream();
-        die("XMPP: got on_auth_failure cb with reason $reason");
-    });
-
-    // execute JAXL, actually sends the message
-    $client->start();
+    if ($XMPP_ERROR['config']['xmpp_lib_name'] == 'JAXL') {
+        // deprecated
+        die('currently, invalid sending module');
+    } else if ($XMPP_ERROR['config']['xmpp_lib_name'] == 'sendxmpp') {
+        xmpp_lib_sendxmpp($message);
+    } else if ($XMPP_ERROR['config']['xmpp_lib_name'] == 'xmpp_perl') {
+        xmpp_lib_xmpp_perl($message);
+    } else {
+        die('currently, invalid sending module');
+    }
 }
 
 /**
@@ -422,7 +400,7 @@ function XMPP_ERROR_check_doublecalls() {
         if ($trace == 'E_XMPP_TRACE') {
             foreach ($trace as $type => $data) {
                 if ($check[$type] == $data) {
-                    XMPP_ERROR_trigger("Function $type was called with same arguments more than twice: " . var_export($data, true));
+                    XMPP_ERROR_trigger("Function $type was called with same arguments more than once: " . var_export($data, true));
                 }
                 $check[$type] = $data;
             }
@@ -462,7 +440,7 @@ function XMPP_ERROR_filter($err_no, $path) {
 }
 
 /**
- * Reformat variabled into HTML-ready and readable text
+ * Reformat variables into HTML-ready and readable text
  *
  * @param type $variable
  * @return string
