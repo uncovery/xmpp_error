@@ -426,10 +426,10 @@ function XMPP_ERROR_filter($err_no, $path) {
     }
 
     $ignore_errors = $XMPP_ERROR['config']['ignore_type'];
-    $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
     if (in_array($err_no, $ignore_errors)) {
         return false;
-    } else if ($err_no !== 1) {
+    } else if ($err_no !== 1) { // we never exclude true errors due to path exclusions
+        $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
         foreach ($ignore_path as $ignore_string) {
             if (strpos($path, $ignore_string) != false) {
                 return false;
@@ -446,7 +446,6 @@ function XMPP_ERROR_filter($err_no, $path) {
  * @return string
  */
 function XMPP_ERROR_array2text($variable) {
-    global $XMPP_ERROR;
     $string = '';
 
     switch(gettype($variable)) {
