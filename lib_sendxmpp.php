@@ -42,9 +42,9 @@ function xmpp_lib_xmpp_perl($message) {
     $path = 'perl ' . __DIR__ . "/xmpp.pl";
 
     foreach ($XMPP_ERROR['config']['xmpp_recipient'] as $rcpt) {
-        $recipient_split = explode("@", $rcpt);
+        // $recipient_split = explode("@", $rcpt);
         // $target_user = $recipient_split[0];
-        $target_host = $recipient_split[1];
+        // $target_host = $recipient_split[1];
 
         $command = "$path $server $server $username $password $rcpt '$msg_save'";
         exec($command);
