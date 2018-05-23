@@ -28,8 +28,8 @@ $XMPP_ERROR['config']['project_name'] = 'My Website';
 // TRUE or FALSE
 $XMPP_ERROR['config']['self_track'] = false;
 
-// currently, XMPP_ERROR only supports JAXL as a xmpp sending module
-// no need to change this
+// currently, XMPP_ERROR only supports JAXL and xmpp_perl as a xmpp sending module
+// Set to 'JAXL' or 'xmpp_perl'
 $XMPP_ERROR['config']['xmpp_lib_name'] = 'JAXL';
 // enter the username of the sending (server) XMPP account here
 // path to the folder where jaxl.php is located. No trailing slash
