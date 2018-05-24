@@ -447,9 +447,6 @@ function XMPP_ERROR_filter($err_no, $path) {
         $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
         XMPP_ERROR_trace($path, $ignore_path);
         foreach ($ignore_path as $ignore_string) {
-            if ($ignore_string == 'wp-admin') {
-                XMPP_ERROR_send_msg($path . " - " . $ignore_string);
-            }
             if (strpos($path, $ignore_string) != false) {
                 return false;
             }
