@@ -20,6 +20,13 @@ global $XMPP_ERROR;
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/lib_sendxmpp.php');
 
+
+if ($XMPP_ERROR['config']['self_track']) {
+    $XMPP_CONFIG = $XMPP_ERROR;
+    $XMPP_ERROR['config']['track_globals'][] = 'XMPP_CONFIG';
+}
+
+
 // this variable tracks if an actual error occured and is set in XMPP_ERROR_handler
 $XMPP_ERROR['error'] = false;
 // this variable tracks if a manually triggered error and is set in XMPP_ERROR_handler
@@ -329,12 +336,15 @@ function XMPP_ERROR_path_make($root, $path_arr) {
  */
 function XMPP_ERROR_handler($errno, $errstr, $errfile, $errline) {
     global $XMPP_ERROR;
-
+    if ($XMPP_ERROR['config']['self_track']) {
+        XMPP_ERROR_trace(__FUNCTION__, func_get_args());
+    }
     // list to translate error numbers into error text
     $error_types = $XMPP_ERROR['error_types'];
     // make sure we care about the error
     $check = XMPP_ERROR_filter($errno, $errfile);
     if (!$check) {
+        XMPP_ERROR_trace("Error was filtered out!");
         return;
     }
     // translate the error number into text
@@ -430,7 +440,11 @@ function XMPP_ERROR_filter($err_no, $path) {
         return false;
     } else if ($err_no !== 1) { // we never exclude true errors due to path exclusions
         $ignore_path = $XMPP_ERROR['config']['ignore_warnings'];
+        XMPP_ERROR_trace($path, $ignore_path);
         foreach ($ignore_path as $ignore_string) {
+            if ($ignore_string == 'wp-admin') {
+                XMPP_ERROR_send_msg($path . " - " . $ignore_string);
+            }
             if (strpos($path, $ignore_string) != false) {
                 return false;
             }
