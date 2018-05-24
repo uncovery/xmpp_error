@@ -17,13 +17,18 @@
  */
 
 global $XMPP_ERROR;
+if ($XMPP_ERROR['config']['self_track']) {
+    $XMPP_PRE_CONFIG = $XMPP_ERROR;
+    $XMPP_ERROR['config']['track_globals'][] = 'XMPP_PRE_CONFIG';
+}
+
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/lib_sendxmpp.php');
 
 
 if ($XMPP_ERROR['config']['self_track']) {
-    $XMPP_CONFIG = $XMPP_ERROR;
-    $XMPP_ERROR['config']['track_globals'][] = 'XMPP_CONFIG';
+    $XMPP_FILE_CONFIG = $XMPP_ERROR;
+    $XMPP_ERROR['config']['track_globals'][] = 'XMPP_FILE_CONFIG';
 }
 
 
